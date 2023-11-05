@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<style>
+    body {
+        background-color: #212121;
+        color: white;
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+    }
+
+    #image {
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+        margin-bottom: 20px;
+    }
+
+    h1,
+    p {
+        margin: 0;
+    }
+</style>
+</head>
+<body style="background-color: #212121; color:white">
+    <!-- 0	UNSENT	Client has been created. open() not called yet.
+1	OPENED	open() has been called.
+2	HEADERS_RECEIVED	send() has been called, and headers and status are available.
+3	LOADING	Downloading; responseText holds partial data.
+4	DONE	The operation is complete. -->
+
+
+<div>
+<div id="card">
+
+</div>
+<form>
+    <label for="fname">User-Namename:</label><br>
+    <input type="text" id="userName" name="fname" ><br>
+    <input type="submit" value="Submit">
+</form>
+<img src="" id="image" style="display: none;">
+<h1 id="User-name" style="display: none;">User Name : </h1>
+<h1 id="followers" style="display: none;">Followers : </h1>
+<p id="bio" style="display: none;">Bio : </p>
+
+
+</div>
+</body>
+<script>
+    const form = document.querySelector('form');
+    form.addEventListener('submit',(e)=>{
+        e.preventDefault();
+        const userNameSearch = document.getElementById('userName');  
+        form.style.display = "none";
+        const requestUrl = 'https://api.github.com/users/' + userNameSearch.value;
+        let userName;
+        let img;
+        let followers;
+        let bio;
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', requestUrl)
+        xhr.onreadystatechange = function () {
+            console.log(xhr.readyState);
+            if (xhr.readyState === 4) {
+                const data = JSON.parse(this.responseText)
+                //console.log(data);
+                console.log(typeof data);
+                userName = data.login
+                img = data.avatar_url
+                bio = data.bio
+                followers = data.followers
+                console.log(followers);
+                console.log(img);
+                console.log(`User-Name ${userName}`);
+                console.log(bio);
+
+                updateUserName(userName);
+                updateimg(img);
+                updateBio(bio);
+                updateFollowers(followers);
+            }
+        }
+        xhr.send();
+
+        const updateUserName = (userName) => {
+            const user = document.getElementById('User-name');
+            user.style.display="block";
+            user.innerHTML += `<span>${userName}</span>`
+        }
+        const updateimg = (imagelink) => {
+            const img = document.getElementById('image');
+            img.style.display = "block";
+            img.src = imagelink;
+        }
+        const updateBio = (bio) => {
+            const Bio = document.getElementById('bio');
+            Bio.style.display = "block";
+            Bio.innerHTML += `<span>${bio}</span>`
+        }
+        const updateFollowers = (follow) => {
+            const Followers = document.getElementById('followers');
+            Followers.style.display = "block";
+            Followers.innerHTML += `<span>${follow}</span>`;
+        }        
+    })
+    //console.log(userNameSearch);
+    // const requestUrl = 'https://api.github.com/users/'+ userNameSearch;
+    // let userName;
+    // let img;
+    // let followers;
+    // let bio;
+    // const xhr = new XMLHttpRequest();
+    // xhr.open('GET', requestUrl)
+    // xhr.onreadystatechange = function(){
+    //     console.log(xhr.readyState);
+    //     if (xhr.readyState === 4) {
+    //         const data = JSON.parse(this.responseText)
+    //         //console.log(data);
+    //         console.log(typeof data);
+    //         userName= data.login
+    //         img= data.avatar_url
+    //         bio= data.bio
+    //         followers= data.followers
+    //         console.log(followers);
+    //         console.log(img);
+    //         console.log(`User-Name ${userName}`);
+    //         console.log(bio);
+
+    //         updateUserName(userName);
+    //         updateimg(img);
+    //         updateBio(bio);
+    //         updateFollowers(followers);
+    //     }
+    // }
+    // xhr.send();
+
+    // const updateUserName =(userName) => {
+    //     const user = document.getElementById('User-name');
+    //     user.innerHTML += `<span>${userName}</span>`
+    // }
+    // const updateimg = (imagelink) => {
+    //     const img = document.getElementById('image');
+    //     img.src = imagelink;
+    // }
+    // const updateBio = (bio) => {
+    //     const Bio = document.getElementById('bio');
+    //     Bio.innerHTML += `<span>${bio}</span>`
+    // }
+    // const updateFollowers = (follow) => {
+    //     const Followers = document.getElementById('followers');
+    //     Followers.innerHTML += `<span>${follow}</span>`;
+    // }  
+    
+</script>
+</html>
